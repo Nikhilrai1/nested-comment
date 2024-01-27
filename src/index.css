@@ -9,3 +9,8 @@
   color:rgba(255,0,0,0.5) !important;
   margin-left: 0 !important;
 }
+
+
+.custom-text {
+  font-size: 1.4rem !important;
+}

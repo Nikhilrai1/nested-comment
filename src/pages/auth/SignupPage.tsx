@@ -9,26 +9,49 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { createUser, defaultCreateSuccess } from '../../redux/features/auth/authSlice';
+import { encryptPassword } from '../../utils/protected/password';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 
 interface FormFields {
   fullname: string;
   username: string;
   password: string;
+  photo: string;
 }
 
 const SignupPage = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormFields>();
 
+  const dispatch = useAppDispatch();
+  const { successCreate } = useAppSelector(state => state.auth);
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    // await login(data);
-    console.log("data", data);
+    const newEncryptedPassword = await encryptPassword(data?.password || "");
+    dispatch(createUser({
+      ...data,
+      password: newEncryptedPassword
+    }))
   };
+
+  useEffect(() => {
+    if (successCreate) {
+      toast.success("Account created successfully.")
+      dispatch(defaultCreateSuccess());
+      reset();
+      navigate("/login")
+    }
+  }, [successCreate])
 
 
   return (
@@ -109,6 +132,22 @@ const SignupPage = () => {
                 required: {
                   value: true,
                   message: "Password is required.",
+                },
+              })}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="photo"
+              label="Photo"
+              placeholder="profile photo url"
+              helperText={errors?.photo?.message}
+              {...register("photo", {
+                required: {
+                  value: true,
+                  message: "Photo is required.",
                 },
               })}
             />

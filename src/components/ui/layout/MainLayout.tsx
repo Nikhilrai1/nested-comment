@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Typography } from "@mui/material"
+import { Box, CssBaseline } from "@mui/material"
 import { useState } from "react"
 import Navbar from "./nav/Navbar";
 import Sidebar, { DrawerHeader } from "./sidebar/Sidebar";

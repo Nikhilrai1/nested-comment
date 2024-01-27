@@ -9,7 +9,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { defaultLoginSuccess, loginUser, signInUser } from '../../redux/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 
 interface FormFields {
@@ -23,11 +27,25 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormFields>();
+  const dispatch = useAppDispatch();
+  const { loginSuccess } = useAppSelector(state => state.auth);
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    // await login(data);
-    console.log("data", data);
+    const authUser = await loginUser(data);
+    console.log("authUser",authUser)
+    if (authUser) {
+      dispatch(signInUser(authUser))
+    }
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      toast.success("Login successfully.")
+      dispatch(defaultLoginSuccess());
+      navigate("/")
+    }
+  }, [loginSuccess])
 
 
   return (

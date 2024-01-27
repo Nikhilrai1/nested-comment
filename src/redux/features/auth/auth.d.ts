@@ -1,24 +1,26 @@
-export interface GeneralInfoI {
-  id: string;
-  logo: string;
-  school_name: string;
-  short_abbreviation: string;
-  address: string;
-  primary_number: string;
-  secondary_number: null;
-  email: string;
-  slogan: string;
-  school_reg_number: string;
-}
+import { Post } from "../post/post";
 
 export interface AuthUser {
-  id: string;
-  email: string;
+  _id: string;
   username: string;
   fullname: string;
+  password?: string;
   photo: string;
   posts: Post[]
 }
+
+interface CreateUserParams {
+  fullname: string;
+  username: string;
+  password?: string;
+  photo: string;
+}
+
+interface LoginUserParams {
+  username: string;
+  password: string;
+}
+
 
 export interface LoginPayload {
   token: {
@@ -30,6 +32,8 @@ export interface LoginPayload {
 }
 
 
-interface Post {
-  
+// db
+interface DB {
+  users: AuthUser[]
 }
+

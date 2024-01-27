@@ -7,6 +7,10 @@ import { postRoutes } from "./routes/post/postRoutes";
 import LoginPage from "./pages/auth/LoginPage";
 import NotFound404 from "./pages/error/NotFound404";
 import SignupPage from "./pages/auth/SignupPage";
+import { useEffect } from "react";
+import { getAuth, verifyUser } from "./redux/features/auth/authSlice";
+import { AuthUser } from "./redux/features/auth/auth";
+import { useAppDispatch } from "./redux/store";
 
 
 // routes
@@ -46,6 +50,19 @@ const routes = createBrowserRouter([
 
 
 const App = () => {
+  const pathname = window.location.pathname;
+  const dispatch = useAppDispatch();
+  // const [verifyToken] = useVerifyTokenMutation();
+
+  useEffect(() => {
+    const auth: { authUser: AuthUser } = JSON.parse(getAuth());
+    console.log(auth);
+
+    if (pathname !== "/login" && auth?.authUser && auth?.authUser?._id) {
+      // verifyUserToken();
+      dispatch(verifyUser(auth.authUser))
+    }
+  }, [pathname]);
   return <RouterProvider router={routes} />;
 }
 

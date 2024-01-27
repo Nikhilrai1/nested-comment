@@ -10,7 +10,7 @@ export const postRoutes: RouteObject = {
     children: [
         {
             index: true,
-            element: <ViewPost />,
+            element: <PostList />,
         },
         {
             path: "add",
@@ -18,7 +18,7 @@ export const postRoutes: RouteObject = {
         },
         {
             path: "view",
-            element: <PostList />,
+            element: <ViewPost />,
         },
         {
             path: "update/:id",
