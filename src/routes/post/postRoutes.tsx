@@ -4,7 +4,7 @@ import AddPost from "../../pages/post/AddPost";
 
 
 export const postRoutes: RouteObject = {
-    path: "post",
+    path: "/post",
     children: [
         {
             index: true,
