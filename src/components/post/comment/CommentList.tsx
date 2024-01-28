@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import CommentCard from './CommentCard'
 import { useState } from 'react';
 import { Comment, PostInfo } from '../../../redux/features/post/post';
+import Pagination from '../../pagination/Pagination';
 
 interface CommentListProps {
   postId: string;
@@ -17,6 +18,13 @@ interface CommentListProps {
 }
 const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent = false, parentPosition }: CommentListProps) => {
   const [showReply, setShowReply] = useState<boolean>(false);
+  const [paginationParams, setPaginationParams] = useState({
+    currentPage: 1,
+    perPage: 5,
+  })
+
+  const start = (paginationParams?.currentPage - 1) * paginationParams?.perPage;
+  const end = start + paginationParams?.perPage;
 
   return (
     <Box sx={{
@@ -27,7 +35,7 @@ const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent =
       gap: "10px",
     }}>
 
-      {showReply && comments?.map((comment, i) => (
+      {showReply && comments?.slice(start,end).map((comment, i) => (
         <CommentCard
           key={i}
           postId={postId}
@@ -39,6 +47,14 @@ const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent =
           postInfo={postInfo}
         />
       ))}
+
+      {!isNested && showReply && <Pagination
+        currentPage={paginationParams.currentPage}
+        totalPages={Math.ceil(comments.length as number / paginationParams?.perPage)}
+        onPageChange={(page) => setPaginationParams({ ...paginationParams, currentPage: page })}
+        hasNextPage={comments?.length as number > paginationParams?.perPage * paginationParams?.currentPage}
+        hasPrevPage={paginationParams?.currentPage > 1}
+      />}
 
       <Box
         sx={{ display: "flex", alignItems: "center", gap: "5px", cursor: "pointer" }}

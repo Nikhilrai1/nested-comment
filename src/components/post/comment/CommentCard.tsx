@@ -144,11 +144,11 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
         <Box sx={{ py: "7px", px: "11px", display: "flex", alignItems: "center", gap: "20px" }}>
 
           {/* cannot reply own replied comment */}
-          {(authUser?._id !== comment?.author?._id) && (
+          {/* {(authUser?._id !== comment?.author?._id) && ( */}
             <Button onClick={() => setToggleReply(prev => !prev)} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
               Reply
             </Button>
-          )}
+          {/* )} */}
 
           {/* only authorized user who created the comment can edit or delete the comment */}
           {(authUser?._id === comment?.author?._id) && (

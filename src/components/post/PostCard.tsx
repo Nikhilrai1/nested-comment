@@ -95,13 +95,18 @@ const PostCard = ({ postItem }: PostCardProps) => {
                 borderTop: "1px solid #F3E9E9",
                 borderBottom: "1px solid #F3E9E9"
             }}>
-                <Typography onClick={() => setAddComment(prev => !prev)} component={"p"} sx={{ color: "#727272", fontSize: "14px", fontWeight: "600px", cursor: "pointer" }}>
+                <Typography onClick={() => setAddComment(prev => !prev)} component={"p"} sx={{
+                    color: "#727272", fontSize: "14px", fontWeight: "600px", cursor: "pointer",
+                    "&:hover": {
+                        color: 'blue',
+                    },
+                }}>
                     Comments
                 </Typography>
             </Box>
 
             {addComment && (
-                <Box sx={{ px: "34px" }}>
+                <Box sx={{ px: "34px", pt: "17px" }}>
                     <AddComment
                         onReply={(reply) => onAddNewComment(reply)}
                     />

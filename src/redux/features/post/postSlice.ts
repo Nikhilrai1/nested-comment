@@ -33,7 +33,7 @@ const createPostInDb = (post: CreatePost) => {
     let isPostCreated = false;
     const users = db?.users?.map(user => {
         if (user._id === post.author?._id) {
-            user.posts.push({
+            user.posts.unshift({
                 _id: uuidV4(),
                 description: post.description,
                 title: post.title,
@@ -64,7 +64,7 @@ const createPostCommentInDb = (payload: createComment) => {
 
             user?.posts?.map(post => {
                 if (post?._id == payload?.postId) {
-                    post?.comments?.push({
+                    post?.comments?.unshift({
                         _id: uuidV4(),
                         author: payload?.commentor,
                         replies: [],
@@ -90,7 +90,7 @@ const createPostCommentInDb = (payload: createComment) => {
 function addReply(commentId: string, reply: Comment, comments: Comment[]) {
     for (let comment of comments) {
         if (comment._id === commentId) {
-            comment.replies.push(reply);
+            comment.replies.unshift(reply);
             return true;
         } else if (comment.replies.length > 0) {
             if (addReply(commentId, reply, comment.replies)) {
