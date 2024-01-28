@@ -18,7 +18,7 @@ export const initialState: InitialStateI = {
   authUser: null,
   authenticated: false,
   noAuth: true,
-  loginSuccess: false
+  loginSuccess: false,
 };
 
 // get db

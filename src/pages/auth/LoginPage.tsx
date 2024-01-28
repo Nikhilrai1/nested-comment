@@ -41,7 +41,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (loginSuccess) {
       toast.success("Login successfully.")
-      dispatch(defaultLoginSuccess());
+      // dispatch(defaultLoginSuccess());
       navigate("/")
     }
   }, [loginSuccess])
