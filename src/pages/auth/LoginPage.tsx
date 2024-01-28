@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { defaultLoginSuccess, loginUser, signInUser } from '../../redux/features/auth/authSlice';
+import { loginUser, signInUser } from '../../redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -113,7 +113,7 @@ const LoginPage = () => {
                 },
               })}
             />
-          
+
             <Button
               type="submit"
               fullWidth
@@ -123,7 +123,7 @@ const LoginPage = () => {
               Sign In
             </Button>
             <Grid container>
-            
+
               <Grid item>
                 <Link to={"/sign-up"}>
                   <MuiLink variant="body2">
