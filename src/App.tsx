@@ -48,6 +48,34 @@ const routes = createBrowserRouter([
 ]);
 
 
+// const replies = [
+//   {
+//     _id: 'commen1',
+//     author: {
+//       _id: 'nikhilrai'
+//     },
+//     replies: [
+//       {
+//         _id: 'commen2',
+//         author: {
+//           _id: 'manoj'
+//         },
+//         replies: [
+//           {
+//             _id: 'commen3',
+//             author: {
+//               _id: 'nikhilrai'
+//             },
+//             replies: [],
+//             text: 'reply to hello from manoj'
+//           }
+//         ],
+//         text: 'hello from manoj'
+//       }
+//     ],
+//     text: 'hello from nikhil'
+//   }
+// ]
 
 const App = () => {
   const pathname = window.location.pathname;
@@ -56,7 +84,6 @@ const App = () => {
 
   useEffect(() => {
     const auth: { authUser: AuthUser } = JSON.parse(getAuth());
-    console.log(auth);
 
     if (pathname !== "/login" && auth?.authUser && auth?.authUser?._id) {
       // verifyUserToken();
@@ -64,6 +91,90 @@ const App = () => {
     }
   }, [pathname]);
   return <RouterProvider router={routes} />;
+
+
+  // useEffect(() => {
+
+    // const comments = [
+    //   {
+    //     _id: "commen1",
+    //     author: {
+    //       _id: "nikhilrai"
+    //     },
+    //     replies: [
+    //       {
+    //         _id: "commen2",
+    //         author: {
+    //           _id: "manoj"
+    //         },
+    //         replies: [],
+    //         text: "hello from manoj"
+    //       }
+    //     ],
+    //     text: "hello from nikhil"
+    //   }
+    // ];
+
+  //   const comments = [
+  //     {
+  //       _id: 'commen1',
+  //       author: {
+  //         _id: 'nikhilrai'
+  //       },
+  //       replies: [
+  //         {
+  //           _id: 'commen2',
+  //           author: {
+  //             _id: 'manoj'
+  //           },
+  //           replies: [
+  //             {
+  //               _id: 'commen3',
+  //               author: {
+  //                 _id: 'nikhilrai'
+  //               },
+  //               replies: [],
+  //               text: 'reply to hello from manoj'
+  //             }
+  //           ],
+  //           text: 'hello from manoj'
+  //         }
+  //       ],
+  //       text: 'hello from nikhil'
+  //     }
+  //   ]
+
+  //   const reply = {
+  //     _id: "commen4",
+  //     author: {
+  //       _id: "manoj"
+  //     },
+  //     replies: [],
+  //     text: "reply to hello from manoj from nikhil"
+  //   }
+
+  //   function addReply(commentId: any, reply: any, comments: any) {
+  //     for (let comment of comments) {
+  //       if (comment._id === commentId) {
+  //         comment.replies.push(reply);
+  //         return true;
+  //       } else if (comment.replies.length > 0) {
+  //         if (addReply(commentId, reply, comment.replies)) {
+  //           return true;
+  //         }
+  //       }
+  //     }
+  //     return false;
+  //   }
+  //   // Example usage:
+  //   addReply("commen3", reply, comments);
+  //   console.log(comments);
+  // }, [])
+
+
+  // return (
+  //   <h1>hello</h1>
+  // )
 }
 
 export default App

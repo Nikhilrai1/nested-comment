@@ -77,9 +77,7 @@ export const loginUser = async (payload: LoginUserParams) => {
   const db: DB = JSON.parse(getDb());
 
   const user = db?.users?.find(user => user?.username === payload.username);
-  console.log("user", user)
   const isPasswordMatch = await comparePassword(payload?.password || "", user?.password || "");
-  console.log("isPasswordMatch", isPasswordMatch)
 
   if (user && isPasswordMatch) {
     localStorage.setItem("auth", JSON.stringify({

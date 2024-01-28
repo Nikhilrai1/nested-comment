@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addPostComment } from "../../redux/features/post/postSlice";
 
 
+
 interface PostCardProps {
     postItem: Post
 }
@@ -107,7 +108,14 @@ const PostCard = ({ postItem }: PostCardProps) => {
                 </Box>
             )}
 
-            <CommentList postId={post?._id} comments={post?.comments} />
+            <CommentList
+                postId={post?._id}
+                comments={post?.comments}
+                postInfo={{
+                    postAuthor: post?.author,
+                    postId: post?._id
+                }}
+            />
         </Box>
     )
 }

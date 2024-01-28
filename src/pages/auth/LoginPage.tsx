@@ -33,7 +33,6 @@ const LoginPage = () => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const authUser = await loginUser(data);
-    console.log("authUser",authUser)
     if (authUser) {
       dispatch(signInUser(authUser))
     }

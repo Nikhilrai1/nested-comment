@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import CommentCard from './CommentCard'
 import { useState } from 'react';
-import { Comment } from '../../../redux/features/post/post';
+import { Comment, PostInfo } from '../../../redux/features/post/post';
 
 interface CommentListProps {
   postId: string;
@@ -12,8 +12,10 @@ interface CommentListProps {
     x: number;
     y: number;
   };
+  postInfo: PostInfo;
+
 }
-const CommentList = ({ postId, comments, isNested = false, hasParent = false, parentPosition }: CommentListProps) => {
+const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent = false, parentPosition }: CommentListProps) => {
   const [showReply, setShowReply] = useState<boolean>(false);
 
   return (
@@ -34,6 +36,7 @@ const CommentList = ({ postId, comments, isNested = false, hasParent = false, pa
           index={i}
           hasParent={hasParent}
           parentPosition={parentPosition}
+          postInfo={postInfo}
         />
       ))}
 

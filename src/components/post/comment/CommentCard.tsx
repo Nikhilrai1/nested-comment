@@ -2,10 +2,11 @@ import { Box, Button, Typography } from "@mui/material"
 import CommentList from "./CommentList";
 import { useEffect, useRef, useState } from "react";
 import AddComment from "./AddComment";
-import { Comment } from "../../../redux/features/post/post";
+import { Comment, PostInfo } from "../../../redux/features/post/post";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { addPostComment } from "../../../redux/features/post/postSlice";
-import { toast } from "react-toastify";
+import { replyComment } from "../../../redux/features/post/postSlice";
+
+
 
 interface CommentCardProps {
   postId: string;
@@ -16,14 +17,14 @@ interface CommentCardProps {
   parentPosition?: {
     x: number;
     y: number;
-  }
+  },
+  postInfo: PostInfo
 }
-const CommentCard = ({ postId, comment, isNested = false, hasParent = false, parentPosition }: CommentCardProps) => {
+const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = false, parentPosition }: CommentCardProps) => {
   const commentRef = useRef<HTMLDivElement>();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [toggleReply, setToggleReply] = useState<boolean>(false);
   const { authUser } = useAppSelector(state => state.auth);
-  const { postSuccess } = useAppSelector(state => state.posts);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -43,33 +44,25 @@ const CommentCard = ({ postId, comment, isNested = false, hasParent = false, par
     };
   }, [toggleReply]);
 
-  const onAddNewComment = (reply: string) => {
-    console.log("reply", reply);
 
-    // if (authUser && postItem?.author) {
-    //   dispatch(addPostComment({
-    //     commentor: {
-    //       _id: authUser?._id,
-    //       fullname: authUser?.fullname,
-    //       photo: authUser?.photo
-    //     },
-    //     postAuthor: {
-    //       _id: postItem?.author?._id || "",
-    //       fullname: postItem?.author?.fullname || "",
-    //       photo: postItem?.author?.photo
-    //     },
-    //     postId: post?._id,
-    //     text: reply
-    //   }))
-    // }
+  // on add reply to comment
+  const onAddNewComment = (reply: string) => {
+    if (authUser && postInfo?.postAuthor) {
+      dispatch(replyComment({
+        commentor: {
+          _id: authUser?._id,
+          fullname: authUser?.fullname,
+          photo: authUser?.photo
+        },
+        postAuthor: postInfo?.postAuthor,
+        postId: postInfo?.postId,
+        text: reply,
+        commentId: comment?._id
+      }))
+    }
     setToggleReply(false);
   }
 
-  useEffect(() => {
-    if (postSuccess) {
-      toast.success("Comment Added Successfully.")
-    }
-  }, [postSuccess])
 
   return (
     <Box sx={{
@@ -138,6 +131,7 @@ const CommentCard = ({ postId, comment, isNested = false, hasParent = false, par
             isNested={true}
             hasParent={true}
             parentPosition={position}
+            postInfo={postInfo}
           />
         )}
       </Box>

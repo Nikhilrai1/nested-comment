@@ -1,4 +1,4 @@
-interface Author {
+export interface Author {
   _id: string;
   fullname: string;
   photo: string;
@@ -18,6 +18,11 @@ export interface Post {
   comments: Comment[];
 }
 
+export interface PostInfo {
+  postAuthor: Author;
+  postId: string;
+}
+
 interface CreatePost {
   author: Author;
   title: string;
@@ -31,3 +36,10 @@ interface createComment {
   text: string;
 }
 
+interface ReplyComment {
+  postId: string;
+  postAuthor: Author;
+  commentor: Author;
+  commentId: string;
+  text: string;
+}
