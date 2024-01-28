@@ -76,10 +76,6 @@ const AddPost = () => {
           })}
           style={{ width: "100%", padding: "5px" }}
         />
-        {/* <FormControlLabel
-      control={<Checkbox value="remember" color="primary" />}
-      label="Remember me"
-    /> */}
         <Button
           type="submit"
           fullWidth

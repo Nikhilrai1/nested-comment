@@ -18,6 +18,7 @@ const PostCard = ({ postItem }: PostCardProps) => {
     const { authUser } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
 
+    // on add new comment
     const onAddNewComment = (reply: string) => {
         if (authUser && postItem?.author) {
             dispatch(addPostComment({

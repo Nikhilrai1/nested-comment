@@ -19,10 +19,10 @@ const initialState: InitialStateI = {
 
 // get all post from db
 const getAllPostsFromDb = () => {
-    let posts: Post[] = [];
+    const posts: Post[] = [];
     const db: DB = JSON.parse(getDb());
     db?.users?.forEach(user => {
-        posts.push(...user?.posts);
+        user?.posts && posts.push(...user.posts);
     })
     return posts;
 };
@@ -88,7 +88,7 @@ const createPostCommentInDb = (payload: createComment) => {
 
 // add reply to specific comment recursively
 function addReply(commentId: string, reply: Comment, comments: Comment[]) {
-    for (let comment of comments) {
+    for (const comment of comments) {
         if (comment._id === commentId) {
             comment.replies.unshift(reply);
             return true;
@@ -103,7 +103,7 @@ function addReply(commentId: string, reply: Comment, comments: Comment[]) {
 
 // edit reply to specific comment recursively
 function editReply(commentId: string, newEditText: string, comments: Comment[]) {
-    for (let comment of comments) {
+    for (const comment of comments) {
         if (comment._id === commentId) {
             comment.text = newEditText;
             return true;

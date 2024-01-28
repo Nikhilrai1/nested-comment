@@ -151,10 +151,7 @@ const SignupPage = () => {
                 },
               })}
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+           
             <Button
               type="submit"
               fullWidth
@@ -164,11 +161,7 @@ const SignupPage = () => {
               Sign Up
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
+              
               <Grid item>
                 <Link to={"/login"}>
                   <MuiLink variant="body2">
