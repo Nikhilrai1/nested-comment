@@ -3,9 +3,11 @@ import { useState } from 'react'
 
 interface AddCommentProps {
     onReply: (reply: string) => void;
+    submitBtnName?: string;
+    defaultText?: string;
 }
-const AddComment = ({ onReply }: AddCommentProps) => {
-    const [text, setText] = useState<string>("");
+const AddComment = ({ onReply, submitBtnName, defaultText }: AddCommentProps) => {
+    const [text, setText] = useState<string>(defaultText || "");
 
     const handleAddComment = (newComment: string) => {
         onReply(newComment);
@@ -34,7 +36,7 @@ const AddComment = ({ onReply }: AddCommentProps) => {
                         fontSize: "12px",
                         mt: "10px"
                     }}>
-                    Reply
+                    {submitBtnName ? submitBtnName : "Reply"}
                 </Button>
             </Box>
         </Box>

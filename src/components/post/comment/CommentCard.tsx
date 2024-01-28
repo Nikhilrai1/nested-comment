@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import AddComment from "./AddComment";
 import { Comment, PostInfo } from "../../../redux/features/post/post";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { replyComment } from "../../../redux/features/post/postSlice";
-
+import { deleteComment, editComment, replyComment } from "../../../redux/features/post/postSlice";
 
 
 interface CommentCardProps {
@@ -24,8 +23,10 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
   const commentRef = useRef<HTMLDivElement>();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [toggleReply, setToggleReply] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
   const { authUser } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
+
 
   useEffect(() => {
     const updatePosition = () => {
@@ -48,19 +49,48 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
   // on add reply to comment
   const onAddNewComment = (reply: string) => {
     if (authUser && postInfo?.postAuthor) {
-      dispatch(replyComment({
-        commentor: {
-          _id: authUser?._id,
-          fullname: authUser?.fullname,
-          photo: authUser?.photo
-        },
-        postAuthor: postInfo?.postAuthor,
-        postId: postInfo?.postId,
-        text: reply,
-        commentId: comment?._id
-      }))
+      if (editMode) {
+        dispatch(editComment({
+          postAuthor: postInfo?.postAuthor,
+          postId: postInfo?.postId,
+          newEditText: reply,
+          commentId: comment?._id,
+        }))
+      }
+      else {
+        dispatch(replyComment({
+          commentor: {
+            _id: authUser?._id,
+            fullname: authUser?.fullname,
+            photo: authUser?.photo
+          },
+          postAuthor: postInfo?.postAuthor,
+          postId: postInfo?.postId,
+          text: reply,
+          commentId: comment?._id
+        }))
+      }
     }
     setToggleReply(false);
+    setEditMode(false);
+  }
+
+
+  // handle on edit click
+  const onEditClick = () => {
+    setEditMode(true);
+    setToggleReply(prev => !prev)
+  }
+
+  // handle delete comment
+  const handleDeleteComment = () => {
+    if (authUser && postInfo?.postAuthor) {
+      dispatch(deleteComment({
+        commentId: comment?._id,
+        postAuthor: postInfo?.postAuthor,
+        postId: postInfo?.postId
+      }))
+    }
   }
 
 
@@ -85,7 +115,6 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
           left: "-54.5px",
           borderLeft: "1px solid #DAE8ED",
           borderBottom: "1px solid #DAE8ED",
-          // backgroundColor: "red",
           borderBottomLeftRadius: "8px",
         }}
         />}
@@ -112,13 +141,32 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
           <Typography sx={{ fontWeight: 600, color: "#000", fontSize: "14px" }}>{comment?.author?.fullname || ""}</Typography>
           <Typography component={"p"} sx={{ color: "#000", fontWeight: "400", fontSize: "14px" }}>{comment?.text || ""}</Typography>
         </Box>
-        <Box sx={{ py: "7px", px: "11px" }}>
-          <Button onClick={() => setToggleReply(prev => !prev)} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
-            Reply
-          </Button>
+        <Box sx={{ py: "7px", px: "11px", display: "flex", alignItems: "center", gap: "20px" }}>
+
+          {/* cannot reply own replied comment */}
+          {(authUser?._id !== comment?.author?._id) && (
+            <Button onClick={() => setToggleReply(prev => !prev)} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
+              Reply
+            </Button>
+          )}
+
+          {/* only authorized user who created the comment can edit or delete the comment */}
+          {(authUser?._id === comment?.author?._id) && (
+            <>
+              <Button onClick={onEditClick} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
+                Edit
+              </Button>
+              <Button onClick={handleDeleteComment} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
+                Delete
+              </Button>
+            </>
+          )}
+
         </Box>
         {toggleReply && (
           <AddComment
+            defaultText={editMode ? comment?.text : undefined}
+            submitBtnName={editMode ? "Edit" : undefined}
             onReply={(reply) => onAddNewComment(reply)}
           />
         )}

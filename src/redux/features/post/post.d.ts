@@ -43,3 +43,16 @@ interface ReplyComment {
   commentId: string;
   text: string;
 }
+
+interface EditComment {
+  postId: string;
+  postAuthor: Author;
+  commentId: string;
+  newEditText: string;
+}
+
+interface DeleteComment {
+  postId: string;
+  postAuthor: Author;
+  commentId: string;
+}
