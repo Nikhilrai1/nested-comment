@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import AddComment from "./AddComment";
 import { Comment, PostInfo } from "../../../redux/features/post/post";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { deleteComment, editComment, replyComment } from "../../../redux/features/post/postSlice";
+import { changeIndicator, deleteComment, editComment, replyComment } from "../../../redux/features/post/postSlice";
 
 
 interface CommentCardProps {
@@ -26,24 +26,7 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
   const [editMode, setEditMode] = useState<boolean>(false);
   const { authUser } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
-
-
-  useEffect(() => {
-    const updatePosition = () => {
-      if (commentRef.current) {
-        const rect = commentRef.current.getBoundingClientRect();
-        setPosition({ x: rect.left, y: rect.top });
-      }
-    };
-
-    // Call updatePosition initially and on resize
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-    };
-  }, [toggleReply]);
+  const { lineIndicator } = useAppSelector(state => state.posts);
 
 
   // on add reply to comment
@@ -71,6 +54,7 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
         }))
       }
     }
+    dispatch(changeIndicator())
     setToggleReply(false);
     setEditMode(false);
   }
@@ -80,6 +64,7 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
   const onEditClick = () => {
     setEditMode(true);
     setToggleReply(prev => !prev)
+    dispatch(changeIndicator())
   }
 
   // handle delete comment
@@ -91,8 +76,32 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
         postId: postInfo?.postId
       }))
     }
+    dispatch(changeIndicator())
   }
 
+  const handleReplyClick = () => {
+    setToggleReply(prev => !prev);
+    dispatch(changeIndicator())
+  }
+
+
+  // handle line indicator
+  useEffect(() => {
+    const updatePosition = () => {
+      if (commentRef.current) {
+        const rect = commentRef.current.getBoundingClientRect();
+        setPosition({ x: rect.left, y: rect.top });
+      }
+    };
+
+    // Call updatePosition initially and on resize
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [toggleReply, lineIndicator]);
 
   return (
     <Box sx={{
@@ -145,9 +154,9 @@ const CommentCard = ({ postId, postInfo, comment, isNested = false, hasParent = 
 
           {/* cannot reply own replied comment */}
           {/* {(authUser?._id !== comment?.author?._id) && ( */}
-            <Button onClick={() => setToggleReply(prev => !prev)} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
-              Reply
-            </Button>
+          <Button onClick={handleReplyClick} variant="text" style={{ minWidth: "" }} sx={{ px: "0px", py: "0px", minWidth: "fit-content", textTransform: "capitalize" }}>
+            Reply
+          </Button>
           {/* )} */}
 
           {/* only authorized user who created the comment can edit or delete the comment */}

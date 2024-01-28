@@ -8,12 +8,14 @@ interface InitialStateI {
     posts: Post[];
     postSuccess: boolean;
     commentSuccess: boolean;
+    lineIndicator: boolean;
 }
 
 const initialState: InitialStateI = {
     posts: [],
     postSuccess: false,
-    commentSuccess: false
+    commentSuccess: false,
+    lineIndicator: false
 };
 
 
@@ -226,44 +228,56 @@ export const postSlice = createSlice({
             const { isPostCreated } = createPostInDb(payload);
             state.postSuccess = isPostCreated ? true : false;
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
 
         addPostComment: (state, { payload }: PayloadAction<createComment>) => {
             const { isCommentCreated } = createPostCommentInDb(payload);
             state.commentSuccess = isCommentCreated ? true : false;
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
 
         replyComment: (state, { payload }: PayloadAction<ReplyComment>) => {
             const { isCommentCreated } = replyCommentInDb(payload);
             state.commentSuccess = isCommentCreated ? true : false;
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
 
         editComment: (state, { payload }: PayloadAction<EditComment>) => {
             const { isCommentCreated } = editReplyCommentInDb(payload);
             state.commentSuccess = isCommentCreated ? true : false;
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
 
         deleteComment: (state, { payload }: PayloadAction<DeleteComment>) => {
             const { isCommentDeleted } = deleteCommentInDb(payload);
             state.commentSuccess = isCommentDeleted ? true : false;
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
 
         defaultPostSuccess: (state) => {
             state.postSuccess = false;
+            state.lineIndicator = !state.lineIndicator;
+        },
+
+        changeIndicator: (state) => {
+            state.lineIndicator = !state.lineIndicator;
         },
 
         defaultCommentSuccess: (state) => {
             state.postSuccess = false;
+            state.lineIndicator = !state.lineIndicator;
         },
 
         getAllPosts: (state) => {
             state.posts = getAllPostsFromDb();
+            state.lineIndicator = !state.lineIndicator;
         },
     },
 });
 
-export const { createPost, addPostComment, editComment, deleteComment, defaultCommentSuccess, replyComment, getAllPosts, defaultPostSuccess } = postSlice.actions;
+export const { createPost, addPostComment, editComment, deleteComment, changeIndicator, defaultCommentSuccess, replyComment, getAllPosts, defaultPostSuccess } = postSlice.actions;

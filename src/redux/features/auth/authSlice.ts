@@ -141,6 +141,7 @@ export const AuthSlice = createSlice({
       state.loginSuccess = false;
     },
 
+
     initAuthUser: (state, { payload }: PayloadAction<LoginPayload>) => {
       state.noAuth = false;
       state.authenticated = true;

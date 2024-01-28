@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material"
+import {  Button } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import PostCard from "../../components/post/PostCard";
@@ -20,11 +20,9 @@ const PostList = () => {
   return (
     <div>
       <Button onClick={() => navigate("/post/add")}>Create Post</Button>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        {posts?.map(post => (
-          <PostCard key={post._id} postItem={post} />
-        ))}
-      </Box>
+      {posts?.map(post => (
+        <PostCard key={post._id} postItem={post} />
+      ))}
     </div>
   )
 }

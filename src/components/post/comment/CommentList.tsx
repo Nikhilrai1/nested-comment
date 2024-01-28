@@ -3,6 +3,8 @@ import CommentCard from './CommentCard'
 import { useState } from 'react';
 import { Comment, PostInfo } from '../../../redux/features/post/post';
 import Pagination from '../../pagination/Pagination';
+import { useAppDispatch } from '../../../redux/store';
+import { changeIndicator } from '../../../redux/features/post/postSlice';
 
 interface CommentListProps {
   postId: string;
@@ -23,8 +25,15 @@ const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent =
     perPage: 5,
   })
 
+  const dispatch = useAppDispatch();
+
   const start = (paginationParams?.currentPage - 1) * paginationParams?.perPage;
   const end = start + paginationParams?.perPage;
+
+  const handleShowReply = () => {
+    setShowReply(prev => !prev);
+    dispatch(changeIndicator())
+  }
 
   return (
     <Box sx={{
@@ -35,7 +44,7 @@ const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent =
       gap: "10px",
     }}>
 
-      {showReply && comments?.slice(start,end).map((comment, i) => (
+      {showReply && comments?.slice(start, end).map((comment, i) => (
         <CommentCard
           key={i}
           postId={postId}
@@ -58,7 +67,7 @@ const CommentList = ({ postId, postInfo, comments, isNested = false, hasParent =
 
       <Box
         sx={{ display: "flex", alignItems: "center", gap: "5px", cursor: "pointer" }}
-        onClick={() => setShowReply(prev => !prev)}
+        onClick={handleShowReply}
       >
         <img src="/assets/reply.svg" style={{ height: "9px", width: "11.5px" }} />
         <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#000" }} >
