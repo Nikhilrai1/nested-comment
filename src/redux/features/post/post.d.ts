@@ -26,7 +26,8 @@ interface CreatePost {
 
 interface createComment {
   postId: string;
-  author: Author;
+  postAuthor: Author;
+  commentor: Author;
   text: string;
 }
 

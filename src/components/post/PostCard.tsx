@@ -1,73 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import CommentList from "./comment/CommentList";
-import { Comment, Post } from "../../redux/features/post/post";
+import { Post } from "../../redux/features/post/post";
 import { useEffect, useState } from "react";
 import AddComment from "./comment/AddComment";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addPostComment } from "../../redux/features/post/postSlice";
-import { toast } from "react-toastify";
 
-// interface Author {
-//     _id: string;
-//     fullname: string;
-//     photo: string;
-// }
-// export interface Comment {
-//     author: Author;
-//     text: string;
-//     replies: Comment[];
-// }
-
-// const comments: Array<Comment> = [
-//     {
-//         author: {
-//             _id: uuidv4(),
-//             fullname: "Jorge Parker",
-//             photo: "/profile/profile1.webp"
-//         },
-//         replies: [
-//             {
-//                 author: {
-//                     _id: uuidv4(),
-//                     fullname: "Raghav",
-//                     photo: "/profile/profile3.JPG"
-//                 },
-//                 replies: [],
-//                 text: "Where is the celebration party jorge? "
-//             },
-//             {
-//                 author: {
-//                     _id: uuidv4(),
-//                     fullname: "Kristina Smith",
-//                     photo: "/profile/profile4.webp"
-//                 },
-//                 replies: [
-//                     {
-//                         author: {
-//                             _id: uuidv4(),
-//                             fullname: "Jacob Parker",
-//                             photo: "/profile/profile2.jpg"
-//                         },
-//                         replies: [],
-//                         text: "Party is not possible without me."
-//                     }
-//                 ],
-//                 text: "Don't forgot to invite me"
-//             }
-//         ],
-//         text: "Wish you a very happy new year Brother"
-//     },
-//     {
-//         author: {
-//             _id: uuidv4(),
-//             fullname: "Andrew",
-//             photo: "/profile/profile5.jpg"
-//         },
-//         replies: [],
-//         text: "Happy new year"
-//     },
-// ]
 
 interface PostCardProps {
     postItem: Post
@@ -77,18 +15,20 @@ const PostCard = ({ postItem }: PostCardProps) => {
     const [post, setPost] = useState<Post>(postItem);
     const [addComment, setAddComment] = useState<boolean>(false);
     const { authUser } = useAppSelector(state => state.auth);
-    const { postSuccess } = useAppSelector(state => state.posts);
     const dispatch = useAppDispatch();
 
     const onAddNewComment = (reply: string) => {
-        console.log("reply", reply);
-
-        if (authUser) {
+        if (authUser && postItem?.author) {
             dispatch(addPostComment({
-                author: {
+                commentor: {
                     _id: authUser?._id,
                     fullname: authUser?.fullname,
                     photo: authUser?.photo
+                },
+                postAuthor: {
+                    _id: postItem?.author?._id || "",
+                    fullname: postItem?.author?.fullname || "",
+                    photo: postItem?.author?.photo
                 },
                 postId: post?._id,
                 text: reply
@@ -98,10 +38,11 @@ const PostCard = ({ postItem }: PostCardProps) => {
     }
 
     useEffect(() => {
-        if (postSuccess) {
-            toast.success("Comment Added Successfully.")
+        if (postItem) {
+            setPost(postItem);
         }
-    }, [postSuccess])
+    }, [postItem])
+
     return (
         <Box sx={{ display: 'flex', flexDirection: "column", maxWidth: "790px", boxShadow: "0px 4px 34px 0px rgba(0, 0, 0, 0.15)" }}>
 
@@ -159,9 +100,11 @@ const PostCard = ({ postItem }: PostCardProps) => {
             </Box>
 
             {addComment && (
-                <AddComment
-                    onReply={(reply) => onAddNewComment(reply)}
-                />
+                <Box sx={{ px: "34px" }}>
+                    <AddComment
+                        onReply={(reply) => onAddNewComment(reply)}
+                    />
+                </Box>
             )}
 
             <CommentList postId={post?._id} comments={post?.comments} />

@@ -10,10 +10,12 @@ const PostList = () => {
   const dispatch = useAppDispatch();
   const { posts } = useAppSelector(state => state.posts);
 
+
   useEffect(() => {
     dispatch(getAllPosts())
   }, [])
-  
+
+
   return (
     <div>
       <Button onClick={() => navigate("/post/add")}>Create Post</Button>

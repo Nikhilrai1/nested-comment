@@ -46,17 +46,22 @@ const CommentCard = ({ postId, comment, isNested = false, hasParent = false, par
   const onAddNewComment = (reply: string) => {
     console.log("reply", reply);
 
-    if (authUser) {
-      dispatch(addPostComment({
-        author: {
-          _id: authUser?._id,
-          fullname: authUser?.fullname,
-          photo: authUser?.photo
-        },
-        postId,
-        text: reply
-      }))
-    }
+    // if (authUser && postItem?.author) {
+    //   dispatch(addPostComment({
+    //     commentor: {
+    //       _id: authUser?._id,
+    //       fullname: authUser?.fullname,
+    //       photo: authUser?.photo
+    //     },
+    //     postAuthor: {
+    //       _id: postItem?.author?._id || "",
+    //       fullname: postItem?.author?.fullname || "",
+    //       photo: postItem?.author?.photo
+    //     },
+    //     postId: post?._id,
+    //     text: reply
+    //   }))
+    // }
     setToggleReply(false);
   }
 

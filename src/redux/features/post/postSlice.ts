@@ -59,19 +59,15 @@ const createPostInDb = (post: CreatePost) => {
 const createPostCommentInDb = (payload: createComment) => {
     const db: DB = JSON.parse(getDb());
     let isCommentCreated = false;
-    console.log("payload", payload)
-    const users = db?.users?.map(user => {
-        if (user._id === payload.author?._id) {
-            console.log("user find", user?.posts)
-            user?.posts?.map(post => {
 
-                console.log("post?._id", post?._id)
-                console.log(post?._id, payload?.postId === post?._id, payload?.postId)
+    const users = db?.users?.map(user => {
+        if (user._id === payload.postAuthor?._id) {
+
+            user?.posts?.map(post => {
                 if (post?._id == payload?.postId) {
-                    console.log("post find")
                     post?.comments?.push({
                         _id: uuidV4(),
-                        author: payload?.author,
+                        author: payload?.commentor,
                         replies: [],
                         text: payload?.text
                     })
@@ -82,8 +78,6 @@ const createPostCommentInDb = (payload: createComment) => {
         }
         return user;
     })
-
-    console.log("user comment", users)
 
     if (users && isCommentCreated) {
         localStorage.setItem("db", JSON.stringify({
@@ -106,7 +100,6 @@ export const postSlice = createSlice({
         addPostComment: (state, { payload }: PayloadAction<createComment>) => {
             const { isCommentCreated } = createPostCommentInDb(payload);
             state.commentSuccess = isCommentCreated ? true : false;
-            state.postSuccess = isCommentCreated ? true : false;
             state.posts = getAllPostsFromDb();
         },
 

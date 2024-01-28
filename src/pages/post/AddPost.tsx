@@ -15,7 +15,7 @@ const AddPost = () => {
   } = useForm<Omit<CreatePost, "authorId">>();
   const dispatch = useAppDispatch();
   const { authUser } = useAppSelector(state => state.auth);
-  const { posts, postSuccess } = useAppSelector(state => state.posts);
+  const { postSuccess } = useAppSelector(state => state.posts);
 
 
   const onSubmit: SubmitHandler<Omit<CreatePost, "authorId">> = async (data) => {
